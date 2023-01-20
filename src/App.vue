@@ -1,5 +1,4 @@
 <script setup>
-
 import { ref, onMounted } from "vue";
 
 const nuevaTarea = ref("");
@@ -9,9 +8,8 @@ const tareas = ref([]);
 const sumarTarea = () => {
   if (nuevaTarea.value != "") {
     tareas.value.push({ done: false, content: nuevaTarea.value });
-    console.log(tareas.value);
     nuevaTarea.value = "";
-    localStorage.setItem("tareas", JSON.stringify(tareas));
+    localStorage.setItem("tareas", JSON.stringify(tareas)); //esto no lo pude hacer andar
   }
 };
 
@@ -21,20 +19,26 @@ const borrarEntrada = () => {
 
 function toggleDone(tarea) {
   tarea.done = !tarea.done;
-  console.log("toggle done");
+  
 }
 
 function deleteTask(tarea) {
   tareas.value.splice(nuevaTarea.value, 1);
 }
 
-onMounted (() => {
-let data = localStorage.getItem("tareas");
-if (data != null){
-  tareas = JSON.parse(data)
-}
-});
+// const vMyDirective = {
+// beforeMount: (data) => { l
+// let data = localStorage.getItem("tareas");
+// if (data != null) {
+// tareas = JSON.parse(data);
 
+// do something with the element
+
+//created(()=>{
+//let data = localStorage.getItem("tareas");
+//if (data != null) {
+//  tareas = JSON.parse(data);
+//
 </script>
 
 <template>
@@ -49,8 +53,13 @@ if (data != null){
           placeholder="add task"
           autofocus
         />
-        <button type="reset" @click.prevent="borrarEntrada" class="btn-mini"> <img src="./assets/cross-sign-svgrepo-com.svg" alt="reset"> </button>
-        <button type="submit" @click.prevent="sumarTarea" class="btn-mini"> <img src="./assets/check-box-svgrepo-com.svg" alt="check"> </button>
+        
+        <button type="submit" @click.prevent="sumarTarea" class="btn-mini">
+          <img src="./assets/check-box-svgrepo-com.svg" alt="check" />
+        </button>
+        <button type="reset" @click.prevent="borrarEntrada" class="btn-mini">
+          <img src="./assets/cross-sign-svgrepo-com.svg" alt="reset" />
+        </button>
       </form>
 
       <div class="row">
@@ -58,19 +67,21 @@ if (data != null){
           <div class="card" v-for="tarea in tareas" :key="tarea">
             <div class="card-body" :class="{ done: tarea.done }">
               <h3 class="card-title">{{ tarea.content }}</h3>
+              
+      
               <button
-                v-show="!tarea.done"
-                class="btn btn-primary"
+                class="whiteBck"
+                
                 @click.prevent="toggleDone(tarea)"
-              >
-                completed
+              > <img  src="./assets/thumbs-up-svgrepo-com (1).svg" :class="{ greyish: tarea.done }">
+               
               </button>
               <button
                 v-show="tarea.done"
-                class="btn btn-danger"
+                class="whiteBck"
                 @click.prevent="deleteTask(tarea)"
               >
-                delete
+                <img src="./assets/trash-svgrepo-com (1).svg" class="btn-mini" alt="">
               </button>
             </div>
           </div>
@@ -80,9 +91,7 @@ if (data != null){
   </main>
 </template>
 
-
 <style scoped>
-
 h1 {
   text-align: center;
 }
@@ -91,12 +100,11 @@ form {
   padding-top: 1rem;
 }
 .done {
-  background-color: grey;
+  text-decoration: line-through;
 }
 
-.wrapper{
-  width: 50vw;
-  margin: 5rem auto ;
+.wrapper {
+  margin: 5rem auto;
   border: 2px solid black;
   border-radius: 10px;
   display: flex;
@@ -105,22 +113,52 @@ form {
   flex-direction: column;
   background-color: whitesmoke;
   padding: 10px;
+  max-width: 80vw;
 }
-@media (max-width: 700px){
-  .wrapper{
-  width: 80vw;
-  }}
-
-button img{
-  width: 1.5rem;
-  
-
+@media (max-width: 700px) {
+  .wrapper {
+    width: 90vw;
   }
-.btn-mini{
-border: none;
-background: none;
 }
-.card{
-  width: 40vw;
+button{
+   border: none;
+}
+button img {
+  width: 1rem;
+ 
+}
+.btn-mini {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.card {
+  min-width: 290px;
+  margin-top: -1rem;
+  max-width: 400px;
+  margin: auto;
+  max-height: fit-content;
+}
+.card-body {
+  max-width: 100%;
+  display: flex;
+
+}
+.row {
+  min-width: 40vw;
+}
+form {
+  min-width: 30vw;
+}
+.card-title{
+  padding-right: 20px;
+  margin: auto;
+}
+.whiteBck{
+  background-color: white;
+}
+.greyish{
+  -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
 }
 </style>
